@@ -1,86 +1,130 @@
 ﻿using Spectre.Console;
 
-var menuChoices = new string[4] { "Sumar", "Restar", "Multiplicar", "Dividir" };
+var menuChoices = new string[6] { "Sumar", "Restar", "Multiplicar", "Dividir", "Historico","Exit" };
 
 string? respuesta;
 bool respuestaCorrecta;
+bool exit = false;
 int numberOne = 0;
 int numberTwo = 0;
 int resultado = 0;
 
 List<string> historial = new List<string>();
 
-/*You need to create a Math game containing the 4 basic operations
-
-
-The divisions should result on INTEGERS ONLY and dividends should go from 0 to 100. Example: Your app shouldn't present the division 7/2 to the user, since it doesn't result in an integer.
-
-You should record previous games in a List and there should be an option in the menu for the user to visualize a history of previous games.
-
-
-You don't need to record results on a database. Once the program is closed the results will be deleted.*/
-
-
-var choice = AnsiConsole.Prompt(
-        new SelectionPrompt<string>()
-        .Title("What do you want to do next?")
-        .AddChoices(menuChoices));
-
-/*if (choice == "Sumar")
+do
 {
-    Console.WriteLine("Elige un numero que quieras sumar");
+    var choice = AnsiConsole.Prompt(
+            new SelectionPrompt<string>()
+            .Title("What do you want to do next?")
+            .AddChoices(menuChoices));
 
-    respuesta = Console.ReadLine();
-    respuestaCorrecta = int.TryParse(respuesta, out numberOne);
-    if (respuestaCorrecta)
+
+    switch (choice)
     {
-        Console.WriteLine("Ahora el segundo numero que quieres sumar");
-        respuesta = Console.ReadLine();
-        respuestaCorrecta = int.TryParse(respuesta, out numberTwo);
-        if (respuestaCorrecta)
-        {
-            resultado = Sumar(numberOne, numberTwo);
-        }
-    }
+        case "Sumar":
+            Console.WriteLine("Elige un numero que quieras sumar");
 
-    Console.WriteLine("La suma de {0} y {1} es {2}", numberOne,numberTwo,resultado);
-
-}
-*/
-switch (choice)
-{
-    case "Sumar":
-        Console.WriteLine("Elige un numero que quieras sumar");
-
-        respuesta = Console.ReadLine();
-        respuestaCorrecta = int.TryParse(respuesta, out numberOne);
-        if (respuestaCorrecta)
-        {
-            Console.WriteLine("Ahora el segundo numero que quieres sumar");
             respuesta = Console.ReadLine();
-            respuestaCorrecta = int.TryParse(respuesta, out numberTwo);
+            respuestaCorrecta = int.TryParse(respuesta, out numberOne);
             if (respuestaCorrecta)
             {
-                resultado = Sumar(numberOne, numberTwo);
+                Console.WriteLine("Ahora el segundo numero que quieres sumar");
+                respuesta = Console.ReadLine();
+                respuestaCorrecta = int.TryParse(respuesta, out numberTwo);
+                if (respuestaCorrecta)
+                {
+                    resultado = numberOne + numberTwo;
+                }
             }
-        }
+            historial.Add($"{choice} = {resultado}");
+            Console.WriteLine("La suma de {0} y {1} es {2}", numberOne, numberTwo, resultado);
 
-        Console.WriteLine("La suma de {0} y {1} es {2}", numberOne, numberTwo, resultado);
+            break;
 
-        break;
+        case "Restar":
+            Console.WriteLine("Elige un numero que quieras restar");
 
-    case "Restar":
-        Console.WriteLine("Te esperas iyoPuta");
-        break;
-    
-}
+            respuesta = Console.ReadLine();
+            respuestaCorrecta = int.TryParse(respuesta, out numberOne);
+            if (respuestaCorrecta)
+            {
+                Console.WriteLine("Ahora el segundo numero que quieres emplear");
+                respuesta = Console.ReadLine();
+                respuestaCorrecta = int.TryParse(respuesta, out numberTwo);
+                if (respuestaCorrecta)
+                {
+                    resultado = numberOne - numberTwo;
+                }
+            }
+            historial.Add($"{choice} = {resultado}");
+            Console.WriteLine("La resta de {0} y {1} es {2}", numberOne, numberTwo, resultado);
+            break;
+
+        case "Dividir":
+            bool cero = false;
+            do
+            {
+                Console.WriteLine("Elige un dividendo");
+
+                respuesta = Console.ReadLine();
+                respuestaCorrecta = int.TryParse(respuesta, out numberOne);
+                if (respuestaCorrecta)
+                {
+                    Console.WriteLine("Ahora el divivisor pero solo uno cuyo resto sea 0, y este entre 0 y 100");
+                    respuesta = Console.ReadLine();
+                    respuestaCorrecta = int.TryParse(respuesta, out numberTwo);
+                    if (respuestaCorrecta)
+                    {
+                        if (numberOne % numberTwo == 0 && numberTwo < 100 && numberOne > 0)
+                        {
+                            resultado = numberOne / numberTwo;
+                            cero = true;
+                        }
+                        else
+                            Console.WriteLine("Error!!!!!");
+                    }
+                }
+            } while (!cero);
+            historial.Add($"{choice} = {resultado}");
+            Console.WriteLine("La division de {0} y {1} es {2}", numberOne, numberTwo, resultado);
+            break;
+
+        case "Multiplicar":
+            Console.WriteLine("Elige un numero que quieras multiplicar");
+
+            respuesta = Console.ReadLine();
+            respuestaCorrecta = int.TryParse(respuesta, out numberOne);
+            if (respuestaCorrecta)
+            {
+                Console.WriteLine("Ahora el segundo numero que quieres emplear");
+                respuesta = Console.ReadLine();
+                respuestaCorrecta = int.TryParse(respuesta, out numberTwo);
+                if (respuestaCorrecta)
+                {
+                    resultado = numberOne * numberTwo;
+                }
+            }
+            historial.Add($"{choice} = {resultado}");
+            Console.WriteLine("La multiplicación de {0} y {1} es {2}", numberOne, numberTwo, resultado);
+            break;
+
+        case "Historico":
+
+            foreach (string juego in historial)
+            {
+                int i = 1;
+                Console.WriteLine($"Juego {i} : " + juego);
+                i++;
+            }
+
+            break;
+
+        case "Exit":
+            exit = true;
+            break;
+
+    }
+} while (!exit);
 
 
-
-
-int Sumar(int uno, int dos)
-{
-    int resultado = uno + dos;
-    return resultado;
-}
 
