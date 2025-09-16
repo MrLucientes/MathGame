@@ -1,130 +1,185 @@
-﻿using Spectre.Console;
+﻿using Microsoft.VisualBasic;
+using Spectre.Console;
 
-var menuChoices = new string[6] { "Sumar", "Restar", "Multiplicar", "Dividir", "Historico","Exit" };
-
-string? respuesta;
-bool respuestaCorrecta;
-bool exit = false;
-int numberOne = 0;
-int numberTwo = 0;
-int resultado = 0;
-
-List<string> historial = new List<string>();
-
-do
+internal class Program
 {
-    var choice = AnsiConsole.Prompt(
-            new SelectionPrompt<string>()
-            .Title("What do you want to do next?")
-            .AddChoices(menuChoices));
-
-
-    switch (choice)
+    public static void Main(string[] args)
     {
-        case "Sumar":
-            Console.WriteLine("Elige un numero que quieras sumar");
+        var menuChoices = new string[6] { "Sumar", "Restar", "Multiplicar", "Dividir", "Historico", "Exit" };
 
-            respuesta = Console.ReadLine();
-            respuestaCorrecta = int.TryParse(respuesta, out numberOne);
-            if (respuestaCorrecta)
+        string? respuesta;
+        bool respuestaCorrecta;
+        bool exit = false;
+        int numberOne = 0;
+        int numberTwo = 0;
+        int resultado = 0;
+        var initialDate = DateTime.UtcNow;
+        List<string> historial = new List<string>();
+
+
+
+        string name = GetName();
+
+        do
+            Menu(name);
+        while (!exit);
+
+        void Menu(string name)
+        {
+            Console.WriteLine("---------------------------------------------");
+            Console.WriteLine($"Hello {name.ToUpper()}. It's {initialDate}. This is your math's game. That's great that you're working on improving yourself\n");
+
+            var choice = AnsiConsole.Prompt(
+                    new SelectionPrompt<string>()
+                    .Title("What game would you like to play today? Choose from the options below:")
+                            .AddChoices(menuChoices));
+
+            switch (choice)
             {
-                Console.WriteLine("Ahora el segundo numero que quieres sumar");
-                respuesta = Console.ReadLine();
-                respuestaCorrecta = int.TryParse(respuesta, out numberTwo);
-                if (respuestaCorrecta)
-                {
-                    resultado = numberOne + numberTwo;
-                }
-            }
-            historial.Add($"{choice} = {resultado}");
-            Console.WriteLine("La suma de {0} y {1} es {2}", numberOne, numberTwo, resultado);
+                case "Sumar":
+                    AdditionGame("Addition selected");
+                    break;
 
-            break;
+                case "Restar":
+                    SubtractionGame("Subtraction selected");
+                    break;
 
-        case "Restar":
-            Console.WriteLine("Elige un numero que quieras restar");
+                case "Dividir":
+                    DivisionGame("Division selected");
+                    break;
 
-            respuesta = Console.ReadLine();
-            respuestaCorrecta = int.TryParse(respuesta, out numberOne);
-            if (respuestaCorrecta)
-            {
-                Console.WriteLine("Ahora el segundo numero que quieres emplear");
-                respuesta = Console.ReadLine();
-                respuestaCorrecta = int.TryParse(respuesta, out numberTwo);
-                if (respuestaCorrecta)
-                {
-                    resultado = numberOne - numberTwo;
-                }
-            }
-            historial.Add($"{choice} = {resultado}");
-            Console.WriteLine("La resta de {0} y {1} es {2}", numberOne, numberTwo, resultado);
-            break;
+                case "Multiplicar":
+                    MultiplicationGame("Multiplication selected");
+                    break;
 
-        case "Dividir":
-            bool cero = false;
-            do
-            {
-                Console.WriteLine("Elige un dividendo");
-
-                respuesta = Console.ReadLine();
-                respuestaCorrecta = int.TryParse(respuesta, out numberOne);
-                if (respuestaCorrecta)
-                {
-                    Console.WriteLine("Ahora el divivisor pero solo uno cuyo resto sea 0, y este entre 0 y 100");
-                    respuesta = Console.ReadLine();
-                    respuestaCorrecta = int.TryParse(respuesta, out numberTwo);
-                    if (respuestaCorrecta)
+                case "Historico":
+                    int i = 1;
+                    foreach (string juego in historial)
                     {
-                        if (numberOne % numberTwo == 0 && numberTwo < 100 && numberOne > 0)
-                        {
-                            resultado = numberOne / numberTwo;
-                            cero = true;
-                        }
-                        else
-                            Console.WriteLine("Error!!!!!");
+
+                        Console.WriteLine($"Juego {i} : " + juego);
+                        i++;
                     }
-                }
-            } while (!cero);
-            historial.Add($"{choice} = {resultado}");
-            Console.WriteLine("La division de {0} y {1} es {2}", numberOne, numberTwo, resultado);
-            break;
 
-        case "Multiplicar":
-            Console.WriteLine("Elige un numero que quieras multiplicar");
+                    break;
 
-            respuesta = Console.ReadLine();
-            respuestaCorrecta = int.TryParse(respuesta, out numberOne);
-            if (respuestaCorrecta)
+                case "Exit":
+                    exit = true;
+                    var finalDate = DateTime.UtcNow;
+                    var time = finalDate - initialDate;
+                    Console.WriteLine($"Has entrado a las {initialDate} y salido a las {finalDate}, estando un total de {time.TotalMinutes:F2}");
+                    break;
+
+            }
+        }
+
+        //-----------------------------------
+        static void DivisionGame(string message)
+        {
+            Console.WriteLine(message);
+        }
+
+        static void MultiplicationGame(string message)
+        {
+            Console.WriteLine(message);
+
+            var random = new Random();
+            var score = 0;
+
+            int firstNumber;
+            int secondNumber;
+
+            for (int i = 0; i < 5; i++)
             {
-                Console.WriteLine("Ahora el segundo numero que quieres emplear");
-                respuesta = Console.ReadLine();
-                respuestaCorrecta = int.TryParse(respuesta, out numberTwo);
-                if (respuestaCorrecta)
+                firstNumber = random.Next(1, 9);
+                secondNumber = random.Next(1, 9);
+
+                Console.WriteLine($"{firstNumber} * {secondNumber}");
+                var result = Console.ReadLine();
+
+                if (int.Parse(result) == firstNumber * secondNumber)
                 {
-                    resultado = numberOne * numberTwo;
+                    Console.WriteLine($"Your answer was correct.");
+                    score++;
                 }
+                else
+                {
+                    Console.WriteLine($"Your answer was incorrect.");
+                }
+
+                if (i == 4) Console.WriteLine($"Game over. Your final score is {score}");
             }
-            historial.Add($"{choice} = {resultado}");
-            Console.WriteLine("La multiplicación de {0} y {1} es {2}", numberOne, numberTwo, resultado);
-            break;
+        }
 
-        case "Historico":
+        static void SubtractionGame(string message)
+        {
+            Console.WriteLine(message);
 
-            foreach (string juego in historial)
+            var random = new Random();
+            var score = 0;
+
+            int firstNumber;
+            int secondNumber;
+
+            for (int i = 0; i < 5; i++)
             {
-                int i = 1;
-                Console.WriteLine($"Juego {i} : " + juego);
-                i++;
+                firstNumber = random.Next(1, 9);
+                secondNumber = random.Next(1, 9);
+
+                Console.WriteLine($"{firstNumber} - {secondNumber}");
+                var result = Console.ReadLine();
+
+                if (int.Parse(result) == firstNumber - secondNumber)
+                {
+                    Console.WriteLine($"Your answer was correct.");
+                    score++;
+                }
+                else
+                {
+                    Console.WriteLine($"Your answer was incorrect.");
+                }
+
+                if (i == 4) Console.WriteLine($"Game over. Your final score is {score}");
             }
+        }
 
-            break;
+        static void AdditionGame(string message)
+        {
+            Console.WriteLine(message);
 
-        case "Exit":
-            exit = true;
-            break;
+            var random = new Random();
+            var score = 0;
 
+            int firstNumber;
+            int secondNumber;
+
+            for (int i = 0; i < 5; i++)
+            {
+                firstNumber = random.Next(1, 9);
+                secondNumber = random.Next(1, 9);
+
+                Console.WriteLine($"{firstNumber} + {secondNumber}");
+                var result = Console.ReadLine();
+
+                if (int.Parse(result) == firstNumber + secondNumber)
+                {
+                    Console.WriteLine($"Your answer was correct.");
+                    score++;
+                }
+                else
+                {
+                    Console.WriteLine($"Your answer was incorrect.");
+                }
+
+                if (i == 4) Console.WriteLine($"Game over. Your final score is {score}");
+            }
+        }
+
+        string GetName()
+        {
+            Console.WriteLine("Please type your name");
+            var name = Console.ReadLine();
+            return name;
+        }
     }
-} while (!exit);
-
-
-
+}
