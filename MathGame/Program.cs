@@ -6,80 +6,105 @@ internal class Program
     public static void Main(string[] args)
     {
         var menuChoices = new string[6] { "Sumar", "Restar", "Multiplicar", "Dividir", "Historico", "Exit" };
-
-        string? respuesta;
-        bool respuestaCorrecta;
-        bool exit = false;
-        int numberOne = 0;
-        int numberTwo = 0;
-        int resultado = 0;
         var initialDate = DateTime.UtcNow;
         List<string> historial = new List<string>();
 
-
-
         string name = GetName();
-
-        do
-            Menu(name);
-        while (!exit);
+        Menu(name);
 
         void Menu(string name)
         {
+            bool exit = false;
             Console.WriteLine("---------------------------------------------");
             Console.WriteLine($"Hello {name.ToUpper()}. It's {initialDate}. This is your math's game. That's great that you're working on improving yourself\n");
-
-            var choice = AnsiConsole.Prompt(
-                    new SelectionPrompt<string>()
-                    .Title("What game would you like to play today? Choose from the options below:")
-                            .AddChoices(menuChoices));
-
-            switch (choice)
+            do
             {
-                case "Sumar":
-                    AdditionGame("Addition selected");
-                    break;
+                var choice = AnsiConsole.Prompt(
+                        new SelectionPrompt<string>()
+                        .Title("¿Que reto te gustaría jugar? Elige entre las siguientes opciones:")
+                                .AddChoices(menuChoices));
 
-                case "Restar":
-                    SubtractionGame("Subtraction selected");
-                    break;
+                switch (choice)
+                {
+                    case "Sumar":
+                        AdditionGame("Addition selected");
+                        break;
 
-                case "Dividir":
-                    DivisionGame("Division selected");
-                    break;
+                    case "Restar":
+                        SubtractionGame("Subtraction selected");
+                        break;
 
-                case "Multiplicar":
-                    MultiplicationGame("Multiplication selected");
-                    break;
+                    case "Dividir":
+                        DivisionGame("Division selected");
+                        break;
 
-                case "Historico":
-                    int i = 1;
-                    foreach (string juego in historial)
-                    {
+                    case "Multiplicar":
+                        MultiplicationGame("Multiplication selected");
+                        break;
 
-                        Console.WriteLine($"Juego {i} : " + juego);
-                        i++;
-                    }
+                    case "Historico":
+                        int i = 1;
+                        int gameScore = 0;
+                        int totalScore = 0;
+                        foreach (string juego in historial)
+                        {
+                            Console.WriteLine($"Juego {i} : " + juego);
+                            i++;
+                            int.TryParse(juego.Split(" ")[6], out gameScore);
+                            totalScore += gameScore;
+                        }
+                        Console.WriteLine($"Has conseguido un total de {totalScore} puntos");
+                        break;
 
-                    break;
-
-                case "Exit":
-                    exit = true;
-                    var finalDate = DateTime.UtcNow;
-                    var time = finalDate - initialDate;
-                    Console.WriteLine($"Has entrado a las {initialDate} y salido a las {finalDate}, estando un total de {time.TotalMinutes:F2}");
-                    break;
-
-            }
+                    case "Exit":
+                        exit = true;
+                        var finalDate = DateTime.UtcNow;
+                        var time = finalDate - initialDate;
+                        Console.WriteLine($"Has entrado a las {initialDate} y salido a las {finalDate}, estando un total de {time.TotalMinutes:F2}");
+                        break;
+                }
+            } while (!exit);
         }
 
         //-----------------------------------
-        static void DivisionGame(string message)
+        void DivisionGame(string message)
         {
             Console.WriteLine(message);
+            var score = 0;
+
+            for (int i = 0; i < 5; i++)
+            {
+                Console.Clear();
+                Console.WriteLine(message);
+                Random random = new Random();
+
+                /*var divisionNumbers = Helpers.GetDivisionNumbers();
+                var firstNumber = divisionNumbers[0];
+                var secondNumber = divisionNumbers[1];*/
+                int firstNumber = random.Next(1, 9);
+                int secondNumber = random.Next(1, 9);
+
+                Console.WriteLine($"{firstNumber} / {secondNumber}");
+                var result = Console.ReadLine();
+
+                if (int.TryParse(result, out int userResult) && userResult == firstNumber / secondNumber)
+                {
+                    Console.WriteLine("Your answer was correct! Type any key for the next question");
+                    score++;
+                    Console.ReadLine();
+                }
+                else
+                {
+                    Console.WriteLine("Your answer was incorrect. Type any key for the next question");
+                    Console.ReadLine();
+                }
+
+                if (i == 4) Console.WriteLine($"Game over. Your final score is {score}");
+            }
+            addHistorial(score, message.Split(" ")[0]);
         }
 
-        static void MultiplicationGame(string message)
+        void MultiplicationGame(string message)
         {
             Console.WriteLine(message);
 
@@ -97,7 +122,7 @@ internal class Program
                 Console.WriteLine($"{firstNumber} * {secondNumber}");
                 var result = Console.ReadLine();
 
-                if (int.Parse(result) == firstNumber * secondNumber)
+                if (int.TryParse(result, out int userResult) && userResult == firstNumber * secondNumber)
                 {
                     Console.WriteLine($"Your answer was correct.");
                     score++;
@@ -109,9 +134,11 @@ internal class Program
 
                 if (i == 4) Console.WriteLine($"Game over. Your final score is {score}");
             }
+
+            addHistorial(score, message.Split(" ")[0]);
         }
 
-        static void SubtractionGame(string message)
+        void SubtractionGame(string message)
         {
             Console.WriteLine(message);
 
@@ -129,7 +156,7 @@ internal class Program
                 Console.WriteLine($"{firstNumber} - {secondNumber}");
                 var result = Console.ReadLine();
 
-                if (int.Parse(result) == firstNumber - secondNumber)
+                if (int.TryParse(result, out int userResult) && userResult == firstNumber - secondNumber)
                 {
                     Console.WriteLine($"Your answer was correct.");
                     score++;
@@ -141,9 +168,10 @@ internal class Program
 
                 if (i == 4) Console.WriteLine($"Game over. Your final score is {score}");
             }
+            addHistorial(score, message.Split(" ")[0]);
         }
 
-        static void AdditionGame(string message)
+        void AdditionGame(string message)
         {
             Console.WriteLine(message);
 
@@ -161,7 +189,7 @@ internal class Program
                 Console.WriteLine($"{firstNumber} + {secondNumber}");
                 var result = Console.ReadLine();
 
-                if (int.Parse(result) == firstNumber + secondNumber)
+                if (int.TryParse(result, out int userResult) && userResult == firstNumber + secondNumber)
                 {
                     Console.WriteLine($"Your answer was correct.");
                     score++;
@@ -173,13 +201,28 @@ internal class Program
 
                 if (i == 4) Console.WriteLine($"Game over. Your final score is {score}");
             }
+            addHistorial(score, message.Split(" ")[0]);
         }
 
         string GetName()
         {
-            Console.WriteLine("Please type your name");
-            var name = Console.ReadLine();
+            bool correct = false;
+            string? name;
+            do
+            {
+
+                Console.WriteLine("Please type your name");
+                name = Console.ReadLine();
+                if (name != "")
+                {
+                    correct = true;
+                }
+            } while (!correct);
             return name;
+        }
+        void addHistorial(int score, string game)
+        {
+            historial.Add($"La puntuacion en {game} fue de {score}");
         }
     }
 }
