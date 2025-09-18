@@ -2,7 +2,6 @@ using Spectre.Console;
 
 namespace MathGame
 {
-
     internal class Menu
     {
         GameEngine engine = new GameEngine();
@@ -15,6 +14,7 @@ namespace MathGame
                 var menuChoices = new string[6] { "Sumar", "Restar", "Multiplicar", "Dividir", "Historico", "Exit" };
                 var initialDate = DateTime.UtcNow;
 
+                Console.Clear();
                 Console.WriteLine("---------------------------------------------");
                 Console.WriteLine($"Hello {name.ToUpper()}. It's {initialDate}. This is your math's game. That's great that you're working on improving yourself\n");
 

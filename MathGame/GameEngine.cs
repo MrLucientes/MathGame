@@ -19,6 +19,7 @@ namespace MathGame
 
                 Console.WriteLine($"{firstNumber} / {secondNumber}");
                 var result = Console.ReadLine();
+                result = Helpers.ValidateResults(result);
 
                 if (int.TryParse(result, out int userResult) && userResult == firstNumber / secondNumber)
                 {
@@ -34,7 +35,7 @@ namespace MathGame
 
                 if (i == 4) Console.WriteLine($"Game over. Your final score is {score}");
             }
-            help.AddToHistory(score, message.Split(" ")[0]);
+            help.AddToHistory(score, Models.GameType.Division);
         }
 
         internal void MultiplicationGame(string message)
@@ -54,6 +55,7 @@ namespace MathGame
 
                 Console.WriteLine($"{firstNumber} * {secondNumber}");
                 var result = Console.ReadLine();
+                result = Helpers.ValidateResults(result);
 
                 if (int.TryParse(result, out int userResult) && userResult == firstNumber * secondNumber)
                 {
@@ -68,7 +70,7 @@ namespace MathGame
                 if (i == 4) Console.WriteLine($"Game over. Your final score is {score}");
             }
 
-            help.AddToHistory(score, message.Split(" ")[0]);
+            help.AddToHistory(score, Models.GameType.Multiplication);
         }
 
         internal void SubtractionGame(string message)
@@ -88,6 +90,7 @@ namespace MathGame
 
                 Console.WriteLine($"{firstNumber} - {secondNumber}");
                 var result = Console.ReadLine();
+                result = Helpers.ValidateResults(result);
 
                 if (int.TryParse(result, out int userResult) && userResult == firstNumber - secondNumber)
                 {
@@ -101,7 +104,7 @@ namespace MathGame
 
                 if (i == 4) Console.WriteLine($"Game over. Your final score is {score}");
             }
-            help.AddToHistory(score, message.Split(" ")[0]);
+            help.AddToHistory(score, Models.GameType.Subtraction);
         }
 
         internal void AdditionGame(string message)
@@ -120,7 +123,9 @@ namespace MathGame
                 secondNumber = random.Next(1, 9);
 
                 Console.WriteLine($"{firstNumber} + {secondNumber}");
+
                 var result = Console.ReadLine();
+                result = Helpers.ValidateResults(result);
 
                 if (int.TryParse(result, out int userResult) && userResult == firstNumber + secondNumber)
                 {
@@ -134,7 +139,7 @@ namespace MathGame
 
                 if (i == 4) Console.WriteLine($"Game over. Your final score is {score}");
             }
-            help.AddToHistory(score, message.Split(" ")[0]);
+            help.AddToHistory(score, Models.GameType.Addition);
         }
 
     }
