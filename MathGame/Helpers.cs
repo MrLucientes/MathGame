@@ -58,12 +58,12 @@ namespace MathGame
 
         internal void PrintGames()
         {
-            var gamesToPrint = games.Where(x => x.Type == GameType.Division);
+            //var gamesToPrint = games.Where(x => x.Type == GameType.Division);
 
             Console.Clear();
             Console.WriteLine("Games History");
             Console.WriteLine("---------------------------");
-            foreach (var game in gamesToPrint)
+            foreach (var game in games) //gamesToPrint)
             {
                 Console.WriteLine($"{game.Date} - {game.Type} : {game.Score} pts");
             }
